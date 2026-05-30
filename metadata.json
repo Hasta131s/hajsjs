@@ -1,0 +1,6 @@
+{
+  "name": "Oyun Flood Aracı",
+  "description": "Oyunlarda ve uygulamalarda belirlediğiniz aralıklarla otomatik mesaj spamlayan ve özelleştirilebilir hız ayarlarına sahip gelişmiş flood aracı.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
