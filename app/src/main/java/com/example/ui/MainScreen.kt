@@ -795,11 +795,8 @@ fun MainScreen(viewModel: MainViewModel) {
                                 Button(
                                     onClick = {
                                         if (isAccessibilityGranted) {
-                                            val intent = Intent(context, SpamAccessibilityService::class.java).apply {
-                                                action = SpamAccessibilityService.ACTION_START_FLOOD
-                                                putExtra(SpamAccessibilityService.EXTRA_CONFIG_ID, config.id)
-                                            }
-                                            context.startService(intent)
+                                            // Direct activation via active static instance
+                                            SpamAccessibilityService.instance?.startFlood(config.id)
                                             NotificationHelper.showInstantErrorNotification(
                                                 context,
                                                 "Flood Başlatıldı",

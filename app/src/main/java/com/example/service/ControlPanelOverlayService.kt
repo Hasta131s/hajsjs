@@ -351,11 +351,7 @@ fun OverlayContent(
                                 onClick = {
                                     val currentConfig = selectedConfig ?: configs.firstOrNull()
                                     if (currentConfig != null && serviceActive) {
-                                        val intent = Intent(context, SpamAccessibilityService::class.java).apply {
-                                            action = SpamAccessibilityService.ACTION_START_FLOOD
-                                            putExtra(SpamAccessibilityService.EXTRA_CONFIG_ID, currentConfig.id)
-                                        }
-                                        context.startService(intent)
+                                        SpamAccessibilityService.instance?.startFlood(currentConfig.id)
                                     }
                                 },
                                 enabled = serviceActive && configs.isNotEmpty() && !isRunning,
@@ -386,10 +382,7 @@ fun OverlayContent(
                             Button(
                                 onClick = {
                                     if (serviceActive) {
-                                        val intent = Intent(context, SpamAccessibilityService::class.java).apply {
-                                            action = SpamAccessibilityService.ACTION_STOP_FLOOD
-                                        }
-                                        context.startService(intent)
+                                        SpamAccessibilityService.instance?.stopFlood()
                                     }
                                 },
                                 enabled = serviceActive && isRunning,
@@ -427,18 +420,11 @@ fun OverlayContent(
                         IconButton(
                             onClick = {
                                 if (serviceActive && isRunning) {
-                                    val intent = Intent(context, SpamAccessibilityService::class.java).apply {
-                                        action = SpamAccessibilityService.ACTION_STOP_FLOOD
-                                    }
-                                    context.startService(intent)
+                                    SpamAccessibilityService.instance?.stopFlood()
                                 } else if (serviceActive) {
                                     val currentConfig = selectedConfig ?: configs.firstOrNull()
                                     if (currentConfig != null) {
-                                        val intent = Intent(context, SpamAccessibilityService::class.java).apply {
-                                            action = SpamAccessibilityService.ACTION_START_FLOOD
-                                            putExtra(SpamAccessibilityService.EXTRA_CONFIG_ID, currentConfig.id)
-                                        }
-                                        context.startService(intent)
+                                        SpamAccessibilityService.instance?.startFlood(currentConfig.id)
                                     }
                                 }
                             },

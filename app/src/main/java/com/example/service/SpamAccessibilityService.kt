@@ -78,7 +78,7 @@ class SpamAccessibilityService : AccessibilityService() {
         return isSpamming.get() && floodJob?.isActive == true
     }
 
-    private fun startFlood(configId: Int) {
+    fun startFlood(configId: Int) {
         if (isSpamming.get()) {
             stopAllFloodJobs("Önceki flood durduruluyor.")
         }
@@ -111,7 +111,8 @@ class SpamAccessibilityService : AccessibilityService() {
             "Flood Çalışıyor: ${config.title}\nHız: ${config.intervalMs}ms"
         ).build()
 
-        startForeground(1001, foregroundNotification)
+        val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        manager.notify(1001, foregroundNotification)
 
         while (isSpamming.get() && (repeatTarget == 0 || sentCount < repeatTarget)) {
             delay(config.intervalMs)
@@ -152,7 +153,7 @@ class SpamAccessibilityService : AccessibilityService() {
 
         // Flood completed
         isSpamming.set(false)
-        stopForeground(true)
+        manager.cancel(1001)
         db.dao().insertLog(
             SendLog(
                 message = "Flood tamamlandı.",
@@ -284,7 +285,8 @@ class SpamAccessibilityService : AccessibilityService() {
     private fun stopAllFloodJobs(reason: String) {
         isSpamming.set(false)
         floodJob?.cancel()
-        stopForeground(true)
+        val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        manager.cancel(1001)
         serviceScope.launch(Dispatchers.IO) {
             val db = AppDatabase.getDatabase(applicationContext)
             db.dao().insertLog(
