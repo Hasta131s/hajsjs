@@ -72,6 +72,7 @@ import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.data.AppDatabase
 import com.example.data.SpamConfig
+import com.example.ui.theme.*
 import com.example.util.FloatingLifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -196,10 +197,11 @@ fun OverlayContent(
             .padding(1.dp)
     ) {
         Card(
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(20.dp),
+            border = androidx.compose.foundation.BorderStroke(1.dp, BentoBorder.copy(alpha = 0.5f)),
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF1E1E2E).copy(alpha = 0.95f),
-                contentColor = Color.White
+                containerColor = BentoCardBg.copy(alpha = 0.95f),
+                contentColor = BentoTextBody
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             modifier = Modifier.wrapContentSize()
@@ -227,13 +229,13 @@ fun OverlayContent(
                                 }
                             }
                             .clip(CircleShape)
-                            .background(Color(0xFF313244))
+                            .background(BentoPurpleBg)
                             .padding(6.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Sürükle",
-                            tint = Color.LightGray,
+                            tint = BentoAccent,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -243,7 +245,7 @@ fun OverlayContent(
                             text = "Flood Panel",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF89B4FA),
+                            color = BentoAccent,
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
                     }
@@ -251,14 +253,14 @@ fun OverlayContent(
                     // Toggle expand / collapse
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(Color(0xFF313244))
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(BentoPurpleBg)
                             .clickable { isExpanded = !isExpanded }
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                            .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
                             text = if (isExpanded) "DARAL" else "GENİŞLE",
-                            color = Color.White,
+                            color = BentoAccent,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -277,7 +279,7 @@ fun OverlayContent(
                             Text(
                                 text = "Erişilebilirlik iznini aktifleştirin!",
                                 fontSize = 11.sp,
-                                color = Color(0xFFF38BA8),
+                                color = BentoError,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(vertical = 4.dp)
                             )
@@ -285,7 +287,7 @@ fun OverlayContent(
                             Text(
                                 text = if (isRunning) "Durum: Flood Aktif" else "Durum: Beklemede",
                                 fontSize = 11.sp,
-                                color = if (isRunning) Color(0xFFA6E3A1) else Color(0xFFCDD6F4),
+                                color = if (isRunning) BentoSuccess else BentoTextBody,
                                 modifier = Modifier.padding(vertical = 2.dp)
                             )
                         }
@@ -296,14 +298,14 @@ fun OverlayContent(
                             text = "Hızlı Şablonlar:",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFBAC2DE)
+                            color = BentoAccent
                         )
 
                         if (configs.isEmpty()) {
                             Text(
                                 text = "Şablon bulunamadı. Lütfen ana ekran üzerinden yeni şablon oluşturun.",
                                 fontSize = 10.sp,
-                                color = Color.Gray,
+                                color = BentoSubtext,
                                 modifier = Modifier.padding(vertical = 4.dp)
                             )
                         } else {
@@ -318,18 +320,18 @@ fun OverlayContent(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(vertical = 2.dp)
-                                            .clip(RoundedCornerShape(6.dp))
-                                            .background(if (isCurrent) Color(0xFF45475A) else Color.Transparent)
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(if (isCurrent) BentoPurpleBg else Color.Transparent)
                                             .clickable {
                                                 selectedConfig = config
                                             }
-                                            .padding(4.dp)
+                                            .padding(6.dp)
                                     ) {
                                         Text(
                                             text = config.title,
                                             fontSize = 11.sp,
                                             fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal,
-                                            color = if (isCurrent) Color(0xFFF9E2AF) else Color.White,
+                                            color = if (isCurrent) BentoAccent else BentoTextGhost,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )
@@ -357,7 +359,13 @@ fun OverlayContent(
                                     }
                                 },
                                 enabled = serviceActive && configs.isNotEmpty() && !isRunning,
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA6E3A1)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = BentoSuccess,
+                                    contentColor = BentoSuccessDark,
+                                    disabledContainerColor = BentoBorder,
+                                    disabledContentColor = BentoSubtext
+                                ),
+                                shape = RoundedCornerShape(10.dp),
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(32.dp),
@@ -366,14 +374,14 @@ fun OverlayContent(
                                 Icon(
                                     imageVector = Icons.Default.PlayArrow,
                                     contentDescription = "Başlat",
-                                    tint = Color(0xFF1E1E2E),
+                                    tint = BentoSuccessDark,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(2.dp))
-                                Text("Başlat", color = Color(0xFF1E1E2E), fontSize = 10.sp)
+                                Text("Başlat", color = BentoSuccessDark, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                             }
 
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
 
                             Button(
                                 onClick = {
@@ -385,15 +393,21 @@ fun OverlayContent(
                                     }
                                 },
                                 enabled = serviceActive && isRunning,
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF38BA8)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = BentoError,
+                                    contentColor = BentoErrorDark,
+                                    disabledContainerColor = BentoBorder,
+                                    disabledContentColor = BentoSubtext
+                                ),
+                                shape = RoundedCornerShape(10.dp),
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(32.dp),
                                 contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
                             ) {
-                                Text("■", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                Text("■", color = BentoErrorDark, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Durdur", color = Color.White, fontSize = 10.sp)
+                                Text("Durdur", color = BentoErrorDark, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -432,15 +446,15 @@ fun OverlayContent(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(CircleShape)
-                                .background(if (isRunning) Color(0xFFF38BA8) else Color(0xFFA6E3A1))
+                                .background(if (isRunning) BentoError else BentoSuccess)
                         ) {
                             if (isRunning) {
-                                Text("■", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                Text("■", color = BentoErrorDark, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                             } else {
                                 Icon(
                                     imageVector = Icons.Default.PlayArrow,
                                     contentDescription = "Mini Tetikleyici",
-                                    tint = Color(0xFF1E1E2E),
+                                    tint = BentoSuccessDark,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -460,7 +474,7 @@ fun OverlayContent(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Kapat",
-                        tint = Color.Gray,
+                        tint = BentoSubtext,
                         modifier = Modifier.size(12.dp)
                     )
                 }

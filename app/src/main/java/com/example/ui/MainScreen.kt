@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,6 +70,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.service.ControlPanelOverlayService
 import com.example.service.SpamAccessibilityService
+import com.example.ui.theme.*
 import com.example.util.NotificationHelper
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -111,58 +113,65 @@ fun MainScreen(viewModel: MainViewModel) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color(0xFF0F1016)
+        containerColor = BentoBackground
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Color(0xFF0F1016))
+                .background(BentoBackground)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Screen Header title
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
+            // Bento Header Card
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, BentoBorder.copy(alpha = 0.5f)),
+                colors = CardDefaults.cardColors(containerColor = BentoCardBg),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp)
+                    .padding(bottom = 12.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Build,
-                    contentDescription = "Flood Icon",
-                    tint = Color(0xFFA594FD),
-                    modifier = Modifier.size(32.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "OYUN FLOOD ARACI",
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Black,
-                    letterSpacing = 1.sp
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(BentoAccent)
+                    ) {
+                        Text("⚡", color = BentoAccentDark, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Flood Kontrol Paneli",
+                            color = BentoTextBody,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Oyunlarda ve uygulamalarda otomatik yüksek hızlı spam aracı.",
+                            color = BentoSubtext,
+                            fontSize = 11.sp
+                        )
+                    }
+                }
             }
-
-            Text(
-                text = "Oyunlarda ve uygulamalarda dilediğiniz hızda otomatik spam gönderin.",
-                color = Color(0xFF9EA3B0),
-                fontSize = 13.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
 
             // SECTION 1: SYSTEM PERMISSIONS DASHBOARD
             Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1C26)),
+                shape = RoundedCornerShape(24.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, BentoAccent.copy(alpha = 0.2f)),
+                colors = CardDefaults.cardColors(containerColor = BentoPurpleBg),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    .padding(bottom = 12.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -170,17 +179,29 @@ fun MainScreen(viewModel: MainViewModel) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Sistem İzinleri",
-                            color = Color(0xFFA594FD),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .background(BentoAccent.copy(alpha = 0.15f))
+                            ) {
+                                Text("🔒", fontSize = 11.sp)
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Sistem İzinleri",
+                                color = BentoAccent,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                         IconButton(onClick = { refreshPermissions() }) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
                                 contentDescription = "Yenile",
-                                tint = Color.LightGray
+                                tint = BentoSubtext
                             )
                         }
                     }
@@ -218,34 +239,50 @@ fun MainScreen(viewModel: MainViewModel) {
 
             // SECTION 2: FLOATING OVERLAY PANEL TRIGGER
             Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E213A)),
+                shape = RoundedCornerShape(24.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, BentoBorder.copy(alpha = 0.5f)),
+                colors = CardDefaults.cardColors(containerColor = BentoCardBg),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 12.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "Yüzen Yönetim Paneli",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
-                    )
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .background(BentoAccent.copy(alpha = 0.15f))
+                        ) {
+                            Text("📱", fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Yüzen Yönetim Paneli",
+                            color = BentoAccent,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "Oyunların içindeyken flood başlatıp durdurmak için ekran üstü konsolu aktifleştirin.",
-                        color = Color(0xFFBAC2DE),
-                        fontSize = 12.sp,
+                        color = BentoSubtext,
+                        fontSize = 11.sp,
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-
+ 
                     Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Button(
@@ -267,31 +304,40 @@ fun MainScreen(viewModel: MainViewModel) {
                                 }
                             },
                             enabled = isOverlayGranted,
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA594FD)),
-                            shape = RoundedCornerShape(8.dp)
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = BentoAccent, 
+                                contentColor = BentoAccentDark,
+                                disabledContainerColor = BentoBorder,
+                                disabledContentColor = BentoSubtext
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.weight(1f)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Build,
-                                contentDescription = "Panel Aç"
+                                contentDescription = "Panel Aç",
+                                modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Paneli Başlat")
+                            Text("Başlat", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                         }
-
+ 
                         Button(
                             onClick = {
                                 val intent = Intent(context, ControlPanelOverlayService::class.java)
                                 context.stopService(intent)
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF38BA8)),
-                            shape = RoundedCornerShape(8.dp)
+                            colors = ButtonDefaults.buttonColors(containerColor = BentoError, contentColor = BentoErrorDark),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.weight(1f)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Panel Kapat"
+                                contentDescription = "Panel Kapat",
+                                modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Paneli Kapat")
+                            Text("Durdur", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -299,19 +345,35 @@ fun MainScreen(viewModel: MainViewModel) {
 
             // SECTION 3: ADD NEW CONFIGURATION TEMPLATE
             Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1C26)),
+                shape = RoundedCornerShape(24.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, BentoBorder.copy(alpha = 0.5f)),
+                colors = CardDefaults.cardColors(containerColor = BentoCardBg),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 12.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Yeni Flood Şablonu Ekle",
-                        color = Color(0xFFA594FD),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .background(BentoAccent.copy(alpha = 0.15f))
+                        ) {
+                            Text("✍️", fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Yeni Flood Şablonu Ekle",
+                            color = BentoAccent,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     Spacer(modifier = Modifier.height(12.dp))
 
                     OutlinedTextField(
@@ -320,12 +382,12 @@ fun MainScreen(viewModel: MainViewModel) {
                         label = { Text("Şablon Başlığı (Örn: Clash Of Clans)") },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0xFFA594FD),
-                            unfocusedBorderColor = Color(0xFF313244),
-                            focusedLabelColor = Color(0xFFA594FD),
-                            unfocusedLabelColor = Color.LightGray,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
+                            focusedBorderColor = BentoAccent,
+                            unfocusedBorderColor = BentoBorder,
+                            focusedLabelColor = BentoAccent,
+                            unfocusedLabelColor = BentoSubtext,
+                            focusedTextColor = BentoTextBody,
+                            unfocusedTextColor = BentoTextBody
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -337,12 +399,12 @@ fun MainScreen(viewModel: MainViewModel) {
                         onValueChange = { viewModel.codeConfigMessage.value = it },
                         label = { Text("Spamlanacak Mesaj İçeriği") },
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0xFFA594FD),
-                            unfocusedBorderColor = Color(0xFF313244),
-                            focusedLabelColor = Color(0xFFA594FD),
-                            unfocusedLabelColor = Color.LightGray,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
+                            focusedBorderColor = BentoAccent,
+                            unfocusedBorderColor = BentoBorder,
+                            focusedLabelColor = BentoAccent,
+                            unfocusedLabelColor = BentoSubtext,
+                            focusedTextColor = BentoTextBody,
+                            unfocusedTextColor = BentoTextBody
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -357,10 +419,12 @@ fun MainScreen(viewModel: MainViewModel) {
                             label = { Text("Gönderim Aralığı (ms)") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color(0xFFA594FD),
-                                unfocusedBorderColor = Color(0xFF313244),
-                                focusedTextColor = Color.White,
-                                unfocusedTextColor = Color.White
+                                focusedBorderColor = BentoAccent,
+                                unfocusedBorderColor = BentoBorder,
+                                focusedLabelColor = BentoAccent,
+                                unfocusedLabelColor = BentoSubtext,
+                                focusedTextColor = BentoTextBody,
+                                unfocusedTextColor = BentoTextBody
                             ),
                             modifier = Modifier
                                 .weight(1f)
@@ -373,10 +437,12 @@ fun MainScreen(viewModel: MainViewModel) {
                             label = { Text("Mesaj Sayısı (0=Sonsuz)") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color(0xFFA594FD),
-                                unfocusedBorderColor = Color(0xFF313244),
-                                focusedTextColor = Color.White,
-                                unfocusedTextColor = Color.White
+                                focusedBorderColor = BentoAccent,
+                                unfocusedBorderColor = BentoBorder,
+                                focusedLabelColor = BentoAccent,
+                                unfocusedLabelColor = BentoSubtext,
+                                focusedTextColor = BentoTextBody,
+                                unfocusedTextColor = BentoTextBody
                             ),
                             modifier = Modifier
                                 .weight(1f)
@@ -389,7 +455,7 @@ fun MainScreen(viewModel: MainViewModel) {
                     // Target Type mode selector
                     Text(
                         text = "Gönderim Yöntemi:",
-                        color = Color.White,
+                        color = BentoTextBody,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -403,18 +469,18 @@ fun MainScreen(viewModel: MainViewModel) {
                         RadioButton(
                             selected = mode == "TEXT_INJECTION",
                             onClick = { viewModel.codeMode.value = "TEXT_INJECTION" },
-                            colors = RadioButtonDefaults.colors(selectedColor = Color(0xFFA594FD))
+                            colors = RadioButtonDefaults.colors(selectedColor = BentoAccent)
                         )
                         Column {
                             Text(
                                 "Metin Alanına Yazdır (Erişilebilirlik)",
-                                color = Color.White,
+                                color = BentoTextBody,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
                                 "Aktif odaklı klavye kutusunu bulur ve yazıyı enjekte eder.",
-                                color = Color.Gray,
+                                color = BentoSubtext,
                                 fontSize = 10.sp
                             )
                         }
@@ -429,18 +495,18 @@ fun MainScreen(viewModel: MainViewModel) {
                         RadioButton(
                             selected = mode == "AUTO_CLICK",
                             onClick = { viewModel.codeMode.value = "AUTO_CLICK" },
-                            colors = RadioButtonDefaults.colors(selectedColor = Color(0xFFA594FD))
+                            colors = RadioButtonDefaults.colors(selectedColor = BentoAccent)
                         )
                         Column {
                             Text(
                                 "Fiziksel Tıklamayı Simüle Et (Oyun Modu)",
-                                color = Color.White,
+                                color = BentoTextBody,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
                                 "Belirlediğiniz koordinatlara basarak klavye ve gönderimi tetikler.",
-                                color = Color.Gray,
+                                color = BentoSubtext,
                                 fontSize = 10.sp
                             )
                         }
@@ -449,7 +515,7 @@ fun MainScreen(viewModel: MainViewModel) {
                     // Expand coordinator coordinates inputs if game mode trigger is configured
                     if (mode == "AUTO_CLICK") {
                         Spacer(modifier = Modifier.height(10.dp))
-                        HorizontalDivider(color = Color(0xFF313244))
+                        HorizontalDivider(color = BentoBorder)
                         Spacer(modifier = Modifier.height(10.dp))
 
                         // Target A setup switch and absolute coordinates UI
@@ -460,13 +526,13 @@ fun MainScreen(viewModel: MainViewModel) {
                         ) {
                             Text(
                                 "Hedef A'yı Kullan (Yazı Alanı Konumu)",
-                                color = Color.LightGray,
+                                color = BentoSubtext,
                                 fontSize = 12.sp
                             )
                             Switch(
                                 checked = useTargetA,
                                 onCheckedChange = { viewModel.codeUseTargetA.value = it },
-                                colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFFA594FD))
+                                colors = SwitchDefaults.colors(checkedThumbColor = BentoAccent)
                             )
                         }
 
@@ -477,7 +543,12 @@ fun MainScreen(viewModel: MainViewModel) {
                                     onValueChange = { viewModel.codeTargetAX.value = it },
                                     label = { Text("A_X Koordinatı") },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Color(0xFFA594FD)),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = BentoAccent,
+                                        unfocusedBorderColor = BentoBorder,
+                                        focusedTextColor = BentoTextBody,
+                                        unfocusedTextColor = BentoTextBody
+                                    ),
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(end = 4.dp)
@@ -487,7 +558,12 @@ fun MainScreen(viewModel: MainViewModel) {
                                     onValueChange = { viewModel.codeTargetAY.value = it },
                                     label = { Text("A_Y Koordinatı") },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Color(0xFFA594FD)),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = BentoAccent,
+                                        unfocusedBorderColor = BentoBorder,
+                                        focusedTextColor = BentoTextBody,
+                                        unfocusedTextColor = BentoTextBody
+                                    ),
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(start = 4.dp)
@@ -505,13 +581,13 @@ fun MainScreen(viewModel: MainViewModel) {
                         ) {
                             Text(
                                 "Hedef B'yi Kullan (Gönderim Tuşu)",
-                                color = Color.LightGray,
+                                color = BentoSubtext,
                                 fontSize = 12.sp
                             )
                             Switch(
                                 checked = useTargetB,
                                 onCheckedChange = { viewModel.codeUseTargetB.value = it },
-                                colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFFA594FD))
+                                colors = SwitchDefaults.colors(checkedThumbColor = BentoAccent)
                             )
                         }
 
@@ -522,7 +598,12 @@ fun MainScreen(viewModel: MainViewModel) {
                                     onValueChange = { viewModel.codeTargetBX.value = it },
                                     label = { Text("B_X Koordinatı") },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Color(0xFFA594FD)),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = BentoAccent,
+                                        unfocusedBorderColor = BentoBorder,
+                                        focusedTextColor = BentoTextBody,
+                                        unfocusedTextColor = BentoTextBody
+                                    ),
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(end = 4.dp)
@@ -532,7 +613,12 @@ fun MainScreen(viewModel: MainViewModel) {
                                     onValueChange = { viewModel.codeTargetBY.value = it },
                                     label = { Text("B_Y Koordinatı") },
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Color(0xFFA594FD)),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = BentoAccent,
+                                        unfocusedBorderColor = BentoBorder,
+                                        focusedTextColor = BentoTextBody,
+                                        unfocusedTextColor = BentoTextBody
+                                    ),
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(start = 4.dp)
@@ -544,21 +630,21 @@ fun MainScreen(viewModel: MainViewModel) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFF27293F), RoundedCornerShape(8.dp))
-                                .padding(8.dp),
+                                .background(BentoPurpleBg, RoundedCornerShape(12.dp))
+                                .padding(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = "Yardım",
-                                tint = Color(0xFFF9E2AF),
+                                tint = BentoAccent,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Spacer(modifier = Modifier.width(6.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "İpucu: Geliştirici Seçenekleri -> 'İşaretçi Konumu' ayarını açarak oyununuzdaki butonların tam X ve Y koordinatını kolayca bulabilirsiniz.",
-                                color = Color(0xFFCDD6F4),
-                                fontSize = 10.sp,
+                                color = BentoTextGhost,
+                                fontSize = 11.sp,
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -569,8 +655,13 @@ fun MainScreen(viewModel: MainViewModel) {
                     Button(
                         onClick = { viewModel.saveConfig() },
                         enabled = configTitle.isNotBlank() && configMessage.isNotBlank(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA594FD)),
-                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = BentoAccent,
+                            contentColor = BentoAccentDark,
+                            disabledContainerColor = BentoBorder,
+                            disabledContentColor = BentoSubtext
+                        ),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "Ekle")
@@ -581,31 +672,48 @@ fun MainScreen(viewModel: MainViewModel) {
             }
 
             // SECTION 4: CONFIGURED SPAM TEMPLATES LIST
-            Text(
-                text = "Kaydedilmiş Şablonlar",
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(BentoAccent.copy(alpha = 0.15f))
+                ) {
+                    Text("📁", fontSize = 11.sp)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Kaydedilmiş Şablonlar",
+                    color = BentoAccent,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             if (configs.isEmpty()) {
                 Text(
                     text = "Kayıtlı şablon bulunmamaktadır.",
-                    color = Color.Gray,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    color = BentoSubtext,
+                    fontSize = 11.sp,
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             } else {
                 configs.forEach { config ->
                     Card(
-                        shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1C26)),
+                        shape = RoundedCornerShape(24.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, BentoBorder.copy(alpha = 0.5f)),
+                        colors = CardDefaults.cardColors(containerColor = BentoCardBg),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp)
+                            .padding(bottom = 10.dp)
                     ) {
-                        Column(modifier = Modifier.padding(14.dp)) {
+                        Column(modifier = Modifier.padding(16.dp)) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -613,7 +721,7 @@ fun MainScreen(viewModel: MainViewModel) {
                             ) {
                                 Text(
                                     text = config.title,
-                                    color = Color.White,
+                                    color = BentoTextBody,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -625,7 +733,7 @@ fun MainScreen(viewModel: MainViewModel) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = "Sil",
-                                        tint = Color(0xFFF38BA8),
+                                        tint = BentoError,
                                         modifier = Modifier.size(16.dp)
                                     )
                                 }
@@ -634,13 +742,15 @@ fun MainScreen(viewModel: MainViewModel) {
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = config.message,
-                                color = Color(0xFFC6CCE0),
-                                fontSize = 12.sp
+                                color = BentoTextGhost,
+                                fontSize = 12.sp,
+                                maxLines = 2,
+                                modifier = Modifier.fillMaxWidth()
                             )
 
                             Spacer(modifier = Modifier.height(10.dp))
-                            HorizontalDivider(color = Color(0xFF313244))
-                            Spacer(modifier = Modifier.height(8.dp))
+                            HorizontalDivider(color = BentoBorder)
+                            Spacer(modifier = Modifier.height(10.dp))
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -648,42 +758,36 @@ fun MainScreen(viewModel: MainViewModel) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
+                                    // Interval Badge
                                     Text(
                                         text = "${config.intervalMs}ms",
-                                        color = Color(0xFFA6E3A1),
-                                        fontSize = 11.sp,
+                                        color = BentoSuccess,
+                                        fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
                                         modifier = Modifier
-                                            .background(
-                                                Color(0xFF25392D),
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                            .background(BentoSuccessDark, RoundedCornerShape(8.dp))
+                                            .padding(horizontal = 8.dp, vertical = 4.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
+                                    // Count Badge
                                     Text(
                                         text = if (config.repeatCount == 0) "Sonsuz" else "${config.repeatCount} Adet",
-                                        color = Color(0xFFF9E2AF),
-                                        fontSize = 11.sp,
+                                        color = BentoAccent,
+                                        fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
                                         modifier = Modifier
-                                            .background(
-                                                Color(0xFF3A3626),
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                            .background(BentoPurpleBg, RoundedCornerShape(8.dp))
+                                            .padding(horizontal = 8.dp, vertical = 4.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
+                                    // Mode Badge
                                     Text(
                                         text = if (config.mode == "AUTO_CLICK") "Oyun" else "Metin",
-                                        color = Color(0xFF89B4FA),
+                                        color = BentoTextBody,
                                         fontSize = 10.sp,
                                         modifier = Modifier
-                                            .background(
-                                                Color(0xFF202A3C),
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                            .background(BentoBorder, RoundedCornerShape(8.dp))
+                                            .padding(horizontal = 8.dp, vertical = 4.dp)
                                     )
                                 }
 
@@ -709,19 +813,18 @@ fun MainScreen(viewModel: MainViewModel) {
                                             )
                                         }
                                     },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF45475A)),
-                                    modifier = Modifier.height(28.dp),
-                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 10.dp, vertical = 0.dp),
-                                    shape = RoundedCornerShape(6.dp)
+                                    colors = ButtonDefaults.buttonColors(containerColor = BentoAccent, contentColor = BentoAccentDark),
+                                    modifier = Modifier.height(30.dp),
+                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                    shape = RoundedCornerShape(12.dp)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.PlayArrow,
                                         contentDescription = "Başlat",
-                                        tint = Color.White,
-                                        modifier = Modifier.size(12.dp)
+                                        modifier = Modifier.size(14.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Text("Hızlı Başlat", color = Color.White, fontSize = 10.sp)
+                                    Text("Hızlı Başlat", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -737,16 +840,28 @@ fun MainScreen(viewModel: MainViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "Gönderim Günlüğü (Veritabanı)",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(BentoAccent.copy(alpha = 0.15f))
+                    ) {
+                        Text("📋", fontSize = 11.sp)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Gönderim Günlüğü",
+                        color = BentoAccent,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
                 Text(
                     text = "Temizle",
-                    color = Color(0xFFF38BA8),
+                    color = BentoError,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -760,28 +875,29 @@ fun MainScreen(viewModel: MainViewModel) {
             if (logs.isEmpty()) {
                 Text(
                     text = "Gönderim kaydı bulunmamaktadır. Flood başlattığınızda loglar burada görünecektir.",
-                    color = Color.Gray,
-                    fontSize = 12.sp,
+                    color = BentoSubtext,
+                    fontSize = 11.sp,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
             } else {
                 Card(
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161622)),
+                    shape = RoundedCornerShape(24.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, BentoBorder.copy(alpha = 0.5f)),
+                    colors = CardDefaults.cardColors(containerColor = BentoOverlayLogBg),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
+                        .height(260.dp)
                 ) {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(8.dp)
+                            .padding(12.dp)
                     ) {
                         items(logs) { log ->
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 4.dp, horizontal = 6.dp),
+                                    .padding(vertical = 4.dp, horizontal = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -789,21 +905,21 @@ fun MainScreen(viewModel: MainViewModel) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(
                                             text = formatTimestamp(log.timestamp),
-                                            color = Color.Gray,
+                                            color = BentoSubtext,
                                             fontSize = 10.sp
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
                                         Text(
                                             text = log.configTitle,
-                                            color = Color(0xFFCBA6F7),
-                                            fontSize = 10.sp,
+                                            color = BentoAccent,
+                                            fontSize = 11.sp,
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
                                         text = log.message,
-                                        color = Color.White,
+                                        color = BentoTextBody,
                                         fontSize = 11.sp,
                                         maxLines = 2,
                                         lineHeight = 13.sp
@@ -811,7 +927,7 @@ fun MainScreen(viewModel: MainViewModel) {
                                     if (log.errorMessage != null) {
                                         Text(
                                             text = log.errorMessage,
-                                            color = Color(0xFFF38BA8),
+                                            color = BentoError,
                                             fontSize = 9.sp,
                                             lineHeight = 11.sp,
                                             modifier = Modifier.padding(top = 2.dp)
@@ -819,22 +935,24 @@ fun MainScreen(viewModel: MainViewModel) {
                                     }
                                 }
 
+                                Spacer(modifier = Modifier.width(6.dp))
+
                                 // Success status badge
                                 Box(
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .background(if (log.status == "SUCCESS") Color(0xFF25392D) else Color(0xFF4F2735))
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .background(if (log.status == "SUCCESS") BentoSuccessDark else BentoPurpleBg)
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = if (log.status == "SUCCESS") "OK" else "HATA",
-                                        color = if (log.status == "SUCCESS") Color(0xFFA6E3A1) else Color(0xFFF38BA8),
+                                        color = if (log.status == "SUCCESS") BentoSuccess else BentoError,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
                             }
-                            HorizontalDivider(color = Color(0xFF1E1E2E), modifier = Modifier.padding(vertical = 4.dp))
+                            HorizontalDivider(color = BentoBorder.copy(alpha = 0.3f), modifier = Modifier.padding(vertical = 4.dp))
                         }
                     }
                 }
@@ -853,8 +971,10 @@ fun PermissionIndicator(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF252634), RoundedCornerShape(12.dp))
-            .padding(12.dp),
+            .clip(RoundedCornerShape(16.dp))
+            .background(BentoCardBg)
+            .border(androidx.compose.foundation.BorderStroke(1.dp, BentoBorder.copy(alpha = 0.5f)), RoundedCornerShape(16.dp))
+            .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -862,13 +982,13 @@ fun PermissionIndicator(
                 Icon(
                     imageVector = if (isGranted) Icons.Default.Check else Icons.Default.Warning,
                     contentDescription = null,
-                    tint = if (isGranted) Color(0xFFA6E3A1) else Color(0xFFF38BA8),
+                    tint = if (isGranted) BentoSuccess else BentoError,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = title,
-                    color = Color.White,
+                    color = BentoTextBody,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -876,27 +996,27 @@ fun PermissionIndicator(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = description,
-                color = Color(0xFFB4BEFE),
+                color = BentoSubtext,
                 fontSize = 11.sp,
                 lineHeight = 13.sp
             )
         }
 
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
         Button(
             onClick = onGrantClick,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (isGranted) Color(0xFF313244) else Color(0xFFA594FD)
+                containerColor = if (isGranted) BentoSuccessDark else BentoAccent,
+                contentColor = if (isGranted) BentoSuccess else BentoAccentDark
             ),
-            shape = RoundedCornerShape(6.dp),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 10.dp),
-            modifier = Modifier.height(30.dp)
+            shape = RoundedCornerShape(10.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp),
+            modifier = Modifier.height(32.dp)
         ) {
             Text(
                 text = if (isGranted) "Aktif" else "Etkinleştir",
-                color = if (isGranted) Color.Gray else Color.White,
-                fontSize = 10.sp,
+                fontSize = 11.sp,
                 fontWeight = FontWeight.Bold
             )
         }
